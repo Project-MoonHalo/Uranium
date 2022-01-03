@@ -1,0 +1,14 @@
+[
+  {
+    "modid": "sukai",
+    "name": "Sukai",
+    "description": "Sky",
+    "version": "0.1",
+    "mcversion": "1.12.2",
+    "logoFile": "",
+    "updateUrl": "",
+    "authorList": ["NullYu","HorizonLN"],
+    "screenshots": [],
+    "dependencies": []
+  }
+]

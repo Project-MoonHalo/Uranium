@@ -1,0 +1,127 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://repo.spongepowered.org/maven/' }
+        }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-20200916.104125-6'
+
+    }
+}
+
+apply plugin: 'java'
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+version project.modVersion
+group project.modGroup
+
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+
+
+repositories {
+    maven {
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+    maven { url = 'https://repo.spongepowered.org/maven/' }
+    maven { url = 'https://impactdevelopment.github.io/maven/' }
+    maven { url = "https://jitpack.io" }
+    mavenCentral()
+    jcenter()
+}
+
+minecraft {
+    mappings channel: 'stable', version: '39-1.12'
+
+    accessTransformer = file('src/main/resources/Uranium_at.cfg')
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'fml.coreMods.load', 'HorizonLN.Uranium.inject.MixinLoader'
+            //property 'mixin.env.disableRefMap', 'true'
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+configurations {
+	library
+}
+
+dependencies {
+    implementation 'org.testng:testng:7.1.0'
+    implementation 'org.testng:testng:7.1.0'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+
+
+    library("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+
+
+    /*
+    library('org.reflections:reflections:0.9.12') {
+        exclude module: 'gson'
+        exclude module: 'guava'
+    }
+     */
+
+    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
+        exclude module: 'gson'
+    }
+
+
+    mixin {
+        defaultObfuscationEnv 'searge'
+        add sourceSets.main, 'mixins.Uranium.refmap.json'
+    }
+
+
+    processResources {
+        inputs.property 'version', project.version
+        inputs.property 'mcversion', project.mcVersion
+
+        from(sourceSets.main.resources.srcDirs) {
+            include 'mcmod.info'
+            expand 'version': project.version,
+                    'mcversion': project.mcVersion,
+                    'modVersion': project.modVersion
+        }
+
+        from(sourceSets.main.resources.srcDirs) {
+            exclude 'mcmod.info'
+        }
+
+        //Move *at.cfg to META-INF/
+        rename '(.+_at.cfg)', 'META-INF/$1'
+    }
+
+    jar {
+        manifest {
+            attributes(
+                    "FMLCorePluginContainsFMLMod": "true",
+                    "FMLCorePlugin": "HorizonLN.Uranium.mixin.MixinLoader",
+                    'MixinConfigs': 'mixins.Uranium.json',
+                    'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                    'TweakOrder': 0,
+                    'ForceLoadAsMod': 'true',
+                    'FMLAT': 'Uranium_at.cfg',
+
+            )
+        }
+
+        from { configurations.library.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+}
