@@ -1,2 +1,2 @@
-# Uranium
-A minecraft utility mod.
+# Sukai
+A open-source minecraft utilty mod.

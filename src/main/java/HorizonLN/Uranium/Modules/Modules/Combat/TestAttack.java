@@ -11,6 +11,6 @@ public class TestAttack extends Module{
     }
     @Override
     public void OnEnable(){
-        Uranium.logger.info(GetName());
+        Uranium.logger.info(GetName()+"‘s category is "+GetCategory());
     }
 }

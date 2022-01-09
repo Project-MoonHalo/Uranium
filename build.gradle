@@ -113,7 +113,7 @@ dependencies {
             attributes(
                     "FMLCorePluginContainsFMLMod": "true",
                     "FMLCorePlugin": "HorizonLN.Uranium.mixin.MixinLoader",
-                    'MixinConfigs': 'mixins.Uranium.json',
+                    'MixinConfigs': 'Uranium_mixin.json',
                     'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                     'TweakOrder': 0,
                     'ForceLoadAsMod': 'true',

@@ -4,16 +4,17 @@ import HorizonLN.Uranium.Others.ModuleType;
 
 public class Module {
     public boolean IsEnabled = false;
-    private ModuleType Category;
-    private String ModuleName;
+    protected ModuleType Category;
+    protected String ModuleName;
+
     public Module(String _Name,ModuleType _Category){
-        _Name = ModuleName;
-        _Category = Category;
+       ModuleName = _Name;
+       Category = _Category;
     }
     public String GetName(){
         return ModuleName;
     }
-    public ModuleType getCategory(){
+    public ModuleType GetCategory(){
         return Category;
     }
 
