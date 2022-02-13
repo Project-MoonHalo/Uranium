@@ -1,13 +1,13 @@
 [
   {
-    "modid": "sukai",
-    "name": "Sukai",
-    "description": "Sky",
+    "modid": "uranium",
+    "name": "Uranium",
+    "description": "A open source hacked client for minecraft 1.12.2",
     "version": "0.1",
     "mcversion": "1.12.2",
     "logoFile": "",
     "updateUrl": "",
-    "authorList": ["NullYu","HorizonLN"],
+    "authorList": ["fireanmeng","Project MoonHalo"],
     "screenshots": [],
     "dependencies": []
   }
