@@ -1,38 +1,34 @@
 buildscript {
     repositories {
-        mavenCentral()
-        maven { url = 'https://maven.minecraftforge.net/' }
-        maven { url = 'https://repo.spongepowered.org/maven/' }
-        }
+        jcenter()
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+    }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-20200916.104125-6'
-
+        classpath 'net.minecraftforge.gradle:ForgeGradle:4.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
-apply plugin: 'java'
-
+apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
+
 version project.modVersion
 group project.modGroup
 
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
 }
 
-
-
 repositories {
-    maven {
-        url = 'https://repo.spongepowered.org/repository/maven-public/'
-    }
-    maven { url = 'https://repo.spongepowered.org/maven/' }
-    maven { url = 'https://impactdevelopment.github.io/maven/' }
-    maven { url = "https://jitpack.io" }
     mavenCentral()
     jcenter()
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven { url = 'https://impactdevelopment.github.io/maven/' }
+    maven { url = 'http://maven-eclipse.github.io/maven' }
+    maven { url = 'https://jitpack.io' }
 }
 
 minecraft {
@@ -44,8 +40,8 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            property 'fml.coreMods.load', 'HorizonLN.Uranium.inject.MixinLoader'
-            //property 'mixin.env.disableRefMap', 'true'
+            property 'fml.coreMods.load', 'MoonHalo.Uranium.Mixin.MixinLoader'
+            property 'mixin.env.disableRefMap', 'true' // Disable refmap so we don't get trolled by Baritone
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -54,74 +50,74 @@ minecraft {
 }
 
 configurations {
-	library
+    addLib
 }
 
 dependencies {
-    implementation 'org.testng:testng:7.1.0'
-    implementation 'org.testng:testng:7.1.0'
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
 
-
-    library("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+    addLib("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         exclude module: 'launchwrapper'
+        exclude module: 'log4j-core' 
         exclude module: 'guava'
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
 
-
-    /*
-    library('org.reflections:reflections:0.9.12') {
-        exclude module: 'gson'
-        exclude module: 'guava'
-    }
-     */
-
     annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
         exclude module: 'gson'
     }
 
+    compileOnly('org.jetbrains:annotations:22.0.0')
 
-    mixin {
-        defaultObfuscationEnv 'searge'
-        add sourceSets.main, 'mixins.Uranium.refmap.json'
+    implementation configurations.addLib
+}
+
+
+mixin {
+    defaultObfuscationEnv 'searge'
+    add sourceSets.main, 'mixins.Uranium.refmap.json'
+}
+
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.mcVersion
+
+    exclude '**/rawimagefiles'
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version,
+                'mcversion': project.mcVersion,
+                'modVersion': project.modVersion
     }
 
-
-    processResources {
-        inputs.property 'version', project.version
-        inputs.property 'mcversion', project.mcVersion
-
-        from(sourceSets.main.resources.srcDirs) {
-            include 'mcmod.info'
-            expand 'version': project.version,
-                    'mcversion': project.mcVersion,
-                    'modVersion': project.modVersion
-        }
-
-        from(sourceSets.main.resources.srcDirs) {
-            exclude 'mcmod.info'
-        }
-
-        //Move *at.cfg to META-INF/
-        rename '(.+_at.cfg)', 'META-INF/$1'
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
     }
 
-    jar {
-        manifest {
-            attributes(
-                    "FMLCorePluginContainsFMLMod": "true",
-                    "FMLCorePlugin": "HorizonLN.Uranium.mixin.MixinLoader",
-                    'MixinConfigs': 'Uranium_mixin.json',
-                    'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-                    'TweakOrder': 0,
-                    'ForceLoadAsMod': 'true',
-                    'FMLAT': 'Uranium_at.cfg',
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
 
-            )
-        }
-
-        from { configurations.library.collect { it.isDirectory() ? it : zipTree(it) } }
+jar {
+    manifest {
+        attributes(
+                'Manifest-Version': 1.0,
+                'MixinConfigs': 'mixins.Uranium.json',
+                'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': 0,
+                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLCorePlugin': 'MoonHalo.Uranium.Mixin.MixinLoader',
+                'ForceLoadAsMod': 'true',
+                'FMLAT': 'Uranium_at.cfg'
+        )
     }
+
+    from {
+        configurations.addLib.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
 }
