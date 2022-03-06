@@ -7,6 +7,6 @@
     "MixinEntityPlayerSP"
   ],
   "client": [
-
+    "MixinMinecraft"
   ]
 }

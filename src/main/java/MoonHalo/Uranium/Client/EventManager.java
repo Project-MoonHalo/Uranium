@@ -1,12 +1,9 @@
 package MoonHalo.Uranium.Client;
 
 import MoonHalo.Uranium.Event.EventBase;
-import MoonHalo.Uranium.Others.EventGetter;
 import MoonHalo.Uranium.Others.Listener;
-import MoonHalo.Uranium.Uranium;
-import net.minecraftforge.fml.common.eventhandler.ListenerList;
 import MoonHalo.Uranium.Utils.ClassUtil;
-import java.lang.reflect.InvocationTargetException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +44,7 @@ public class EventManager {
         for(Method method : ListenerList){
             try {
             method.invoke(method.getClass(),event);
-            }catch (Exception e){
+            }catch (Exception e) {
 
             }
         }

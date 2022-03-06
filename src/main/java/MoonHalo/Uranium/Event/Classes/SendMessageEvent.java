@@ -1,5 +1,10 @@
 package MoonHalo.Uranium.Event.Classes;
 
-public class SendMessageEvent {
-    String message;
+import MoonHalo.Uranium.Event.EventBase;
+
+public class SendMessageEvent extends EventBase {
+    static String Message = null;
+    public SendMessageEvent(String msg){
+        Message = msg;
+    }
 }

@@ -3,6 +3,7 @@ package MoonHalo.Uranium.Utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -13,7 +14,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class ClassUtil {
-    public static Set<Class<?>> getClasses(String pack) throws Exception {
+    public static Set<Class<?>> getClasses(String pack){
         // 第一个class类的集合
         Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
         // 是否循环迭代
@@ -131,5 +132,17 @@ public class ClassUtil {
                 }
             }
         }
+    }
+
+
+    public static Object GetClassObject(Object clz,String ObjName) {
+        try {
+            Field rt = clz.getClass().getDeclaredField(ObjName);
+            rt.setAccessible(true);
+            return rt.get(ObjName);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
