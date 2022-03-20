@@ -1,5 +1,5 @@
 # Uranium
 A open-source minecraft utilty mod.    
 
-#About  
+# About  
 This project under MIT license.
