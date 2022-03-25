@@ -1,8 +1,10 @@
 package MoonHalo.Uranium;
 
 import MoonHalo.Uranium.Client.ModuleManager;
-import MoonHalo.Uranium.Event.Classes.LoadEvent;
-import MoonHalo.Uranium.Others.Listener;
+import MoonHalo.Uranium.Event.Classes.PreLoadEvent;
+import MoonHalo.Uranium.Event.Impl.AnnotationEventBus;
+import MoonHalo.Uranium.Event.Impl.EventBusInterface;
+import MoonHalo.Uranium.Event.Impl.Listener;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,10 +16,12 @@ public class Uranium {
     public static String CommandPrefix = ".";
     public static String ClientName = "Uranium";
     public static String ClientVersion = "B1";
+    public static EventBusInterface EventBus = new AnnotationEventBus();
     @Listener
-    public static void Oninit(LoadEvent event) {
+    public static void OnPreinit(PreLoadEvent event) {
         ModuleManager.getInstance();
-        Display.setTitle("Uranium");
+        Display.setTitle("Uranium "+ClientVersion);
     }
+
 
 }

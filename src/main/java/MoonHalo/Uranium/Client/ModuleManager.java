@@ -6,32 +6,29 @@ import java.util.Set;
 
 import MoonHalo.Uranium.Event.Classes.SendMessageEvent;
 import MoonHalo.Uranium.Modules.Module;
-import MoonHalo.Uranium.Others.Listener;
+import MoonHalo.Uranium.Event.Impl.Listener;
 import MoonHalo.Uranium.Others.NotifyType;
 import MoonHalo.Uranium.Uranium;
-import MoonHalo.Uranium.Utils.ClassUtil;
+import org.jetbrains.annotations.NotNull;
 
 import static MoonHalo.Uranium.Utils.ClassUtil.GetClassObject;
+import static MoonHalo.Uranium.Utils.ClassUtil.getClasses;
 
 public class ModuleManager {
-    public static List<Module> ModuleList = new ArrayList<>();
-    public static List<String> ModuleNameList = new ArrayList<>();
+    public static @NotNull List<Module> ModuleList = new ArrayList<>();
+    public static @NotNull List<String> ModuleNameList = new ArrayList<>();
     private static ModuleManager instance;
 
     public void RegModule(Module ModuleClass){
-        ModuleNameList.add(ModuleClass.GetName());
         ModuleList.add(ModuleClass);
     }
 
-    public static Module getModuleByName(String targetName) throws ClassNotFoundException {
-        if (ModuleNameList.lastIndexOf(targetName) == -1) {
-            Uranium.logger.error("Module Not Found!");
-            throw new ClassNotFoundException("Module Not Found!");
+    public static @NotNull Module getModuleByName(String targetName) throws ClassNotFoundException {
+        for (Module module:ModuleList){
+            Uranium.logger.info(module.GetName());
+            if(module.GetName().equals(targetName)) {return module;}
         }
-            else{
-            Module Clazz = ModuleList.get(ModuleNameList.lastIndexOf(targetName));
-            return Clazz;
-        }
+        throw new ClassNotFoundException();
     }
     public static ModuleManager getInstance() {
         if (instance == null) instance = new ModuleManager();
@@ -39,7 +36,7 @@ public class ModuleManager {
     }
     //if a message send,this method will be call.
     @Listener
-    public static void ListenMessageSend(SendMessageEvent event){
+    public static void ListenMessageSend(@NotNull SendMessageEvent event){
         String message = null;
         message = String.valueOf(GetClassObject(event,"Message"));
         Uranium.logger.info(message);
@@ -57,22 +54,15 @@ public class ModuleManager {
     }
 
     public ModuleManager(){
-        Set<Class<?>> clzset = ClassUtil.getClasses("MoonHalo.Uranium");
-        try {
-
-
-            for (Class clz : clzset) {
-                if (clz.getSuperclass().getName().equals("MoonHalo.Uranium.Modules.Module")) {
-                    try {
-                        Module module = (Module) clz.newInstance();
-                        RegModule(module);
-                    } catch (InstantiationException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+        Set<Class<?>> classesset = getClasses("MoonHalo.Uranium");
+        for (Class clz:classesset){
+            if(clz.getSuperclass()==Module.class){
+                try {
+                    RegModule((Module) clz.newInstance());
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
     }
 }

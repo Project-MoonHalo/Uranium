@@ -1,7 +1,7 @@
 package MoonHalo.Uranium.Mixin.Classes;
-import MoonHalo.Uranium.Client.EventManager;
 import MoonHalo.Uranium.Event.Classes.SendMessageEvent;
 import MoonHalo.Uranium.Event.EventBase;
+import MoonHalo.Uranium.Uranium;
 import net.minecraft.client.entity.EntityPlayerSP;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ public class MixinEntityPlayerSP {
          //   ci.cancel();
         //}
         EventBase event = new SendMessageEvent(message);
-        EventManager.getInstance().PostEvent(event);
+        Uranium.EventBus.Post(event);
         if(event.isCanceled){
             ci.cancel();
         }

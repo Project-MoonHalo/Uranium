@@ -63,6 +63,9 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
+    addLib(group: 'org.reflections', name: 'reflections', version: '0.9.11') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
 
     annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
         exclude module: 'gson'
