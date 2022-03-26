@@ -16,8 +16,9 @@ import java.io.IOException;
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft {
 
-    @Inject(method = "init",at = @At(value = "INVOKE",target = "Lnet/minecraft/client/Minecraft;checkGLError(Ljava/lang/String;)V"))
+    @Inject(method = "init",at = @At(value = "INVOKE",target = "Lnet/minecraft/client/Minecraft;checkGLError(Ljava/lang/String;)V",ordinal = 0))
     private void init(CallbackInfo ci) throws LWJGLException, IOException{
+        Uranium.logger.debug("Init!!!!!");
         Uranium.EventBus.Post(new PreLoadEvent());
     }
     @Inject(method = "init",at=@At(value = "RETURN"))

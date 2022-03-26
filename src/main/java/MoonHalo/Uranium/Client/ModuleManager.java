@@ -16,7 +16,6 @@ import static MoonHalo.Uranium.Utils.ClassUtil.getClasses;
 
 public class ModuleManager {
     public static @NotNull List<Module> ModuleList = new ArrayList<>();
-    public static @NotNull List<String> ModuleNameList = new ArrayList<>();
     private static ModuleManager instance;
 
     public void RegModule(Module ModuleClass){

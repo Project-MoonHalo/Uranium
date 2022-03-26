@@ -1,4 +1,5 @@
 package MoonHalo.Uranium.Client;
 
-public class TaskManager {
+public class ConfigManager {
+
 }

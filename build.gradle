@@ -3,6 +3,7 @@ buildscript {
         jcenter()
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven{ url = "http://maven.aliyun.com/nexus/content/groups/public/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:4.+'
@@ -26,9 +27,9 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-    maven { url = 'https://impactdevelopment.github.io/maven/' }
     maven { url = 'http://maven-eclipse.github.io/maven' }
     maven { url = 'https://jitpack.io' }
+    maven{ url = "http://maven.aliyun.com/nexus/content/groups/public/" }
 }
 
 minecraft {

@@ -1,7 +1,14 @@
 package MoonHalo.Uranium.Event.Impl;
 
+import MoonHalo.Uranium.Concurrent.TaskThread;
+import MoonHalo.Uranium.Uranium;
 import MoonHalo.Uranium.Utils.ClassUtil;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Configuration;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.util.ConfigurationBuilder;
+
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.Set;
@@ -11,17 +18,13 @@ public class AnnotationEventBus implements EventBusInterface{
         FindListener();
     }
     public void FindListener(){
-        try {
-            Set<Class<?>> ClassSet = ClassUtil.getClasses("MoonHalo.Uranium");
-            for (Class clazz:ClassSet){
-                for (Method method :clazz.getMethods()){
-                    if(method.isAnnotationPresent(Listener.class)){
-                        Subscribe(method);
-                    }
+        Uranium.logger.debug("Event bus is start");
+        for (Class clz : ClassUtil.getClasses("MoonHalo")){
+            for (Method method : clz.getMethods()){
+                if(method.isAnnotationPresent(Listener.class)){
+                    ListenerList.add(method);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         ListenerList.sort(new SortListener());
     }

@@ -1,22 +1,19 @@
 package MoonHalo.Uranium.Modules;
 
+import MoonHalo.Uranium.Others.ModuleInfo;
 import MoonHalo.Uranium.Others.ModuleType;
 
 public class Module {
     public boolean IsEnabled = false;
-    protected ModuleType Category;
-    protected String ModuleName;
 
-    public Module(String _Name,ModuleType _Category){
-       ModuleName = _Name;
-       Category = _Category;
-
-    }
     public String GetName(){
-        return ModuleName;
+        return getClass().getAnnotation(ModuleInfo.class).ModName();
     }
     public ModuleType GetCategory(){
-        return Category;
+        return getClass().getAnnotation(ModuleInfo.class).type();
+    }
+    public String GetInfo(){
+        return getClass().getAnnotation(ModuleInfo.class).info();
     }
 
     public void OnEnable(){
@@ -41,4 +38,5 @@ public class Module {
     public void OnExecute(String[] args){
 
     }
+
 }

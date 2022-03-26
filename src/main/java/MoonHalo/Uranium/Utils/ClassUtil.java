@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+
 public class ClassUtil {
     public static Set<Class<?>> getClasses(String pack){
         // 第一个class类的集合
@@ -128,7 +129,6 @@ public class ClassUtil {
                     //classes.add(Thread.currentThread().getContextClassLoader().loadClass(packageName + '.' + className));
                 } catch (ClassNotFoundException e) {
                     // log.error("添加用户自定义视图类错误 找不到此类的.class文件");
-                    e.printStackTrace();
                 }
             }
         }
